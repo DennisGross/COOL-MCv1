@@ -1,1 +1,1 @@
-# cool-mc
+# COOL-MC
