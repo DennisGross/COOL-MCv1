@@ -1,0 +1,265 @@
+mdp
+const int xMax;
+const int yMax;
+const double slickness;
+//At North Border
+formula NORTH_BORDER = (y=yMax);
+formula NOT_NORTH_BORDER = (NORTH_BORDER=false);
+//At East Border
+formula EAST_BORDER = (x=xMax);
+formula NOT_EAST_BORDER = (EAST_BORDER=false);
+//At South Border
+formula SOUTH_BORDER = (y=0);
+formula NOT_SOUTH_BORDER = (SOUTH_BORDER=false);
+//At West Border
+formula WEST_BORDER = (x=0);
+formula NOT_WEST_BORDER = (WEST_BORDER=false);
+//MAXSTEPS
+
+
+//Bee1
+formula bee1_random_1 = bee1_x=0 & bee1_y=0;
+formula bee1_random_2 = bee1_x>0 & bee1_x <xMax & bee1_y=0;
+formula bee1_random_3 = bee1_x = xMax & bee1_y=0;
+formula bee1_random_4 = bee1_x=0 & bee1_y>0 & bee1_y<yMax;
+formula bee1_random_5 = bee1_x>0 & bee1_y>0 & bee1_y<yMax & bee1_x<xMax;
+formula bee1_random_6 = bee1_x=xMax & bee1_y>0 & bee1_y<yMax;
+formula bee1_random_7 = bee1_x=0 & bee1_y=yMax;
+formula bee1_random_8 = bee1_x>0 & bee1_y=yMax & bee1_x <xMax;
+formula bee1_random_9 = bee1_x=xMax & bee1_y=yMax;
+
+
+//Bee2
+formula bee2_random_1 = bee2_x=0 & bee2_y=0;
+formula bee2_random_2 = bee2_x>0 & bee2_x <xMax & bee2_y=0;
+formula bee2_random_3 = bee2_x = xMax & bee2_y=0;
+formula bee2_random_4 = bee2_x=0 & bee2_y>0 & bee2_y<yMax;
+formula bee2_random_5 = bee2_x>0 & bee2_y>0 & bee2_y<yMax & bee2_x<xMax;
+formula bee2_random_6 = bee2_x=xMax & bee2_y>0 & bee2_y<yMax;
+formula bee2_random_7 = bee2_x=0 & bee2_y=yMax;
+formula bee2_random_8 = bee2_x>0 & bee2_y=yMax & bee2_x <xMax;
+formula bee2_random_9 = bee2_x=xMax & bee2_y=yMax;
+
+
+
+//Sting
+formula STING = (bee1_x=x) & (bee1_y=y) & (bee2_x=x) & (bee2_y=y);
+
+//Done
+formula IS_NOT_DONE = (done=false);
+
+module agent
+	//Location
+	x : [0..xMax] init 0;
+	y : [0..yMax]init 0;
+	done : bool init false;
+	//NORTH actions
+	[north] NOT_NORTH_BORDER & IS_NOT_DONE -> (1-slickness) : (y'=y+1) + slickness : true;
+	[north] NORTH_BORDER & IS_NOT_DONE -> (1-slickness) :(y'=y) + slickness : true;
+	//EAST actions
+	[east] NOT_EAST_BORDER & IS_NOT_DONE -> (1-slickness) :(x'=x+1) + slickness : true;
+	[east] (EAST_BORDER) & IS_NOT_DONE -> (1-slickness) :(x'=x) + slickness : true;
+	//SOUTH actions
+	[south] NOT_SOUTH_BORDER & IS_NOT_DONE -> (1-slickness) :(y'=y-1) + slickness : true;
+	[south] SOUTH_BORDER & IS_NOT_DONE -> (1-slickness) :(y'=y) + slickness : true;
+	//WEST actions
+	[west] NOT_WEST_BORDER & IS_NOT_DONE -> (1-slickness) :(x'=x-1) + slickness : true;
+	[west] (WEST_BORDER) & IS_NOT_DONE -> (1-slickness) :(x'=x)  + slickness : true;
+
+	[north] STING  & IS_NOT_DONE -> (done'=true);
+	[east] STING & IS_NOT_DONE-> (done'=true);
+	[south] STING & IS_NOT_DONE -> (done'=true);
+	[west] STING & IS_NOT_DONE -> (done'=true);
+endmodule
+
+module bee1
+	bee1_x : [0..xMax] init xMax;
+	bee1_y : [0..yMax] init yMax;
+
+
+	//1223
+	//4556
+	//4556
+	//7889
+
+	//1
+	[north] bee1_random_1 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x);
+	//2
+	[north] bee1_random_2 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//3
+	[north] bee1_random_3 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//4
+	[north] bee1_random_4 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x);
+	//5
+	[north] bee1_random_5 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//6
+	[north] bee1_random_6-> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//7
+	[north] bee1_random_7 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x);
+	//8
+	[north] bee1_random_8 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x-1);
+	//9
+	[north] bee1_random_9 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x-1);
+
+
+	//1random_
+	[east] bee1_random_1 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x);
+	//2
+	[east] bee1_random_2 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//3
+	[east] bee1_random_3 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//4
+	[east] bee1_random_4 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x);
+	//5
+	[east] bee1_random_5 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//6
+	[east] bee1_random_6 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//7
+	[east] bee1_random_7 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x);
+	//8
+	[east] bee1_random_8 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x-1);
+	//9
+	[east] bee1_random_9 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x-1);
+
+
+	//1
+	[south] bee1_random_1 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x);
+	//2
+	[south] bee1_random_2 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//3
+	[south] bee1_random_3 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//4
+	[south] bee1_random_4 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x);
+	//5
+	[south] bee1_random_5 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//6
+	[south] bee1_random_6 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//7
+	[south] bee1_random_7 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x);
+	//8
+	[south] bee1_random_8 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x-1);
+	//9
+	[south] bee1_random_9 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x-1);
+
+
+	//1
+	[west] bee1_random_1 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x);
+	//2
+	[west] bee1_random_2 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//3
+	[west] bee1_random_3 -> 0.25: (bee1_y'=bee1_y) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//4
+	[west] bee1_random_4 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x);
+	//5
+	[west] bee1_random_5 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//6
+	[west] bee1_random_6 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y+1) + 0.25: (bee1_x'=bee1_x-1);
+	//7
+	[west] bee1_random_7 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x);
+	//8
+	[west] bee1_random_8 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x+1) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x-1);
+	//9
+	[west] bee1_random_9 -> 0.25: (bee1_y'=bee1_y-1) + 0.25 : (bee1_x'=bee1_x) + 0.25: (bee1_y'=bee1_y) + 0.25: (bee1_x'=bee1_x-1);
+
+endmodule
+
+module bee2
+	bee2_x : [0..xMax] init xMax;
+	bee2_y : [0..yMax] init yMax;
+
+
+	//1223
+	//4556
+	//4556
+	//7889
+
+	//1
+	[north] bee2_random_1 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x);
+	//2
+	[north] bee2_random_2 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//3
+	[north] bee2_random_3 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//4
+	[north] bee2_random_4 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x);
+	//5
+	[north] bee2_random_5 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//6
+	[north] bee2_random_6-> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//7
+	[north] bee2_random_7 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x);
+	//8
+	[north] bee2_random_8 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x-1);
+	//9
+	[north] bee2_random_9 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x-1);
+
+
+	//1random_
+	[east] bee2_random_1 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x);
+	//2
+	[east] bee2_random_2 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//3
+	[east] bee2_random_3 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//4
+	[east] bee2_random_4 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x);
+	//5
+	[east] bee2_random_5 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//6
+	[east] bee2_random_6 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//7
+	[east] bee2_random_7 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x);
+	//8
+	[east] bee2_random_8 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x-1);
+	//9
+	[east] bee2_random_9 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x-1);
+
+
+	//1
+	[south] bee2_random_1 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x);
+	//2
+	[south] bee2_random_2 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//3
+	[south] bee2_random_3 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//4
+	[south] bee2_random_4 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x);
+	//5
+	[south] bee2_random_5 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//6
+	[south] bee2_random_6 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//7
+	[south] bee2_random_7 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x);
+	//8
+	[south] bee2_random_8 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x-1);
+	//9
+	[south] bee2_random_9 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x-1);
+
+
+	//1
+	[west] bee2_random_1 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x);
+	//2
+	[west] bee2_random_2 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//3
+	[west] bee2_random_3 -> 0.25: (bee2_y'=bee2_y) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//4
+	[west] bee2_random_4 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x);
+	//5
+	[west] bee2_random_5 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//6
+	[west] bee2_random_6 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y+1) + 0.25: (bee2_x'=bee2_x-1);
+	//7
+	[west] bee2_random_7 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x);
+	//8
+	[west] bee2_random_8 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x+1) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x-1);
+	//9
+	[west] bee2_random_9 -> 0.25: (bee2_y'=bee2_y-1) + 0.25 : (bee2_x'=bee2_x) + 0.25: (bee2_y'=bee2_y) + 0.25: (bee2_x'=bee2_x-1);
+
+endmodule
+
+
+rewards
+	[north] !STING : 100;
+	[east] !STING : 100;
+	[south] !STING: 100;
+	[west] !STING : 100;
+endrewards
+
+label "sting" = (STING = true);

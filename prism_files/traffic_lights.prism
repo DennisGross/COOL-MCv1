@@ -1,0 +1,435 @@
+mdp
+const int XMAX = 3;
+const int YMAX = 3;
+const double traffic =0.1;
+
+
+
+
+//#VEHICLE1
+
+//Vehicle 1 a horizontal car?
+formula IS_HORIZONTAL1 = (vehicle1_horizontal=true);
+formula IS_VERTICAL1 = (IS_HORIZONTAL1=false);
+//Vehicle 1 at horizontal border?
+formula VEHICLE1_HORIZONTAL_BORDER = (vehicle1_x=XMAX);
+formula NOT_VEHICLE1_HORIZONTAL_BORDER = (VEHICLE1_HORIZONTAL_BORDER=false);
+//Vehicle 1 at vertical border?
+formula VEHICLE1_VERTICAL_BORDER = (vehicle1_y=YMAX);
+formula NOT_VEHICLE1_VERTICAL_BORDER = (VEHICLE1_VERTICAL_BORDER=false);
+//Vehicle 1 horizontal blocked?
+formula VEHICLE1_HORIZONTAL_BLOCKED = (vehicle1_x=traffic_light1_x-1 & traffic_light1_status = 1) | (vehicle1_x=traffic_light2_x-1 & traffic_light2_status = 1);
+formula NOT_VEHICLE1_HORIZONTAL_BLOCKED = (VEHICLE1_HORIZONTAL_BLOCKED = false);
+//Vehicle 1 vertical blocked?
+formula VEHICLE1_VERTICAL_BLOCKED = (vehicle1_y=traffic_light1_y-1 & traffic_light1_status = 2) | (vehicle1_y=traffic_light2_y-1 & traffic_light2_status = 2);
+formula NOT_VEHICLE1_VERTICAL_BLOCKED = (VEHICLE1_VERTICAL_BLOCKED = false);
+
+
+
+
+module vehicle1
+	vehicle1_x: [0..XMAX] init 0;
+	vehicle1_y: [0..YMAX] init 2;
+	vehicle1_horizontal: bool init true;
+	done : bool init false;
+
+	//###################HORIZONTAL
+
+	//Horizontal movement
+	[OFF1] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & NOT_VEHICLE1_HORIZONTAL_BORDER -> (1-traffic) : (vehicle1_x'=vehicle1_x+1) + traffic : (vehicle1_x'=vehicle1_x);
+	[HOR_BLOCK1] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & NOT_VEHICLE1_HORIZONTAL_BORDER-> (1-traffic) : (vehicle1_x'=vehicle1_x+1) + traffic : (vehicle1_x'=vehicle1_x);
+	[VERT_BLOCK1] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & NOT_VEHICLE1_HORIZONTAL_BORDER-> (1-traffic) : (vehicle1_x'=vehicle1_x+1) + traffic : (vehicle1_x'=vehicle1_x);
+	[TICK1] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & NOT_VEHICLE1_HORIZONTAL_BORDER-> (1-traffic) : (vehicle1_x'=vehicle1_x+1) + traffic : (vehicle1_x'=vehicle1_x);
+
+	[OFF2] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & NOT_VEHICLE1_HORIZONTAL_BORDER -> (1-traffic) : (vehicle1_x'=vehicle1_x+1) + traffic : (vehicle1_x'=vehicle1_x);
+	[HOR_BLOCK2] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & NOT_VEHICLE1_HORIZONTAL_BORDER-> (1-traffic) : (vehicle1_x'=vehicle1_x+1) + traffic : (vehicle1_x'=vehicle1_x);
+	[VERT_BLOCK2] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & NOT_VEHICLE1_HORIZONTAL_BORDER-> (1-traffic) : (vehicle1_x'=vehicle1_x+1) + traffic : (vehicle1_x'=vehicle1_x);
+	[TICK2] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & NOT_VEHICLE1_HORIZONTAL_BORDER-> (1-traffic) : (vehicle1_x'=vehicle1_x+1) + traffic : (vehicle1_x'=vehicle1_x);
+
+
+	//Horizontal BORDER movement
+	[OFF1] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & VEHICLE1_HORIZONTAL_BORDER -> (1-traffic) : (vehicle1_x'=0) + traffic : (vehicle1_x'=vehicle1_x);
+	[HOR_BLOCK1] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & VEHICLE1_HORIZONTAL_BORDER -> (1-traffic) : (vehicle1_x'=0) + traffic : (vehicle1_x'=vehicle1_x);
+	[VERT_BLOCK1] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & VEHICLE1_HORIZONTAL_BORDER-> (1-traffic) : (vehicle1_x'=0) + traffic : (vehicle1_x'=vehicle1_x);
+	[TICK1] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & VEHICLE1_HORIZONTAL_BORDER-> (1-traffic) : (vehicle1_x'=0) + traffic : (vehicle1_x'=vehicle1_x);
+	
+	[OFF2] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & VEHICLE1_HORIZONTAL_BORDER -> (1-traffic) : (vehicle1_x'=0) + traffic : (vehicle1_x'=vehicle1_x);
+	[HOR_BLOCK2] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & VEHICLE1_HORIZONTAL_BORDER -> (1-traffic) : (vehicle1_x'=0) + traffic : (vehicle1_x'=vehicle1_x);
+	[VERT_BLOCK2] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & VEHICLE1_HORIZONTAL_BORDER-> (1-traffic) : (vehicle1_x'=0) + traffic : (vehicle1_x'=vehicle1_x);
+	[TICK2] IS_HORIZONTAL1 & NOT_VEHICLE1_HORIZONTAL_BLOCKED & VEHICLE1_HORIZONTAL_BORDER-> (1-traffic) : (vehicle1_x'=0) + traffic : (vehicle1_x'=vehicle1_x);
+
+	//Horizontal BLOCKED
+	[OFF1] IS_HORIZONTAL1 & VEHICLE1_HORIZONTAL_BLOCKED -> true;
+	[HOR_BLOCK1] IS_HORIZONTAL1 & VEHICLE1_HORIZONTAL_BLOCKED -> true;
+	[VERT_BLOCK1] IS_HORIZONTAL1 & VEHICLE1_HORIZONTAL_BLOCKED -> true;
+	[TICK1] IS_HORIZONTAL1 & VEHICLE1_HORIZONTAL_BLOCKED -> true;
+
+	[OFF2] IS_HORIZONTAL1 & VEHICLE1_HORIZONTAL_BLOCKED -> true;
+	[HOR_BLOCK2] IS_HORIZONTAL1 & VEHICLE1_HORIZONTAL_BLOCKED -> true;
+	[VERT_BLOCK2] IS_HORIZONTAL1 & VEHICLE1_HORIZONTAL_BLOCKED -> true;
+	[TICK2] IS_HORIZONTAL1 & VEHICLE1_HORIZONTAL_BLOCKED-> true;
+
+
+
+
+
+	//###################VERTICAL
+
+	//Vertical movement
+	[OFF1] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & NOT_VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=vehicle1_y+1) + traffic : (vehicle1_y'=vehicle1_y);
+	[HOR_BLOCK1] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & NOT_VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=vehicle1_y+1) + traffic : (vehicle1_y'=vehicle1_y);
+	[VERT_BLOCK1] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & NOT_VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=vehicle1_y+1) + traffic : (vehicle1_y'=vehicle1_y);
+	[TICK1] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & NOT_VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=vehicle1_y+1) + traffic : (vehicle1_y'=vehicle1_y);
+
+	[OFF2] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & NOT_VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=vehicle1_y+1) + traffic : (vehicle1_y'=vehicle1_y);
+	[HOR_BLOCK2] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & NOT_VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=vehicle1_y+1) + traffic : (vehicle1_y'=vehicle1_y);
+	[VERT_BLOCK2] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & NOT_VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=vehicle1_y+1) + traffic : (vehicle1_y'=vehicle1_y);
+	[TICK2] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & NOT_VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=vehicle1_y+1) + traffic : (vehicle1_y'=vehicle1_y);
+
+	//Vertical BORDER movement
+	[OFF1] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=0) + traffic : (vehicle1_y'=vehicle1_y);
+	[HOR_BLOCK1] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=0) + traffic : (vehicle1_y'=vehicle1_y);
+	[VERT_BLOCK1] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & VEHICLE1_VERTICAL_BORDER-> (1-traffic) : (vehicle1_y'=0) + traffic : (vehicle1_y'=vehicle1_y);
+	[TICK1] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & VEHICLE1_VERTICAL_BORDER-> (1-traffic) : (vehicle1_y'=0) + traffic : (vehicle1_y'=vehicle1_y);
+
+	[OFF2] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=0) + traffic : (vehicle1_y'=vehicle1_y);
+	[HOR_BLOCK2] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & VEHICLE1_VERTICAL_BORDER -> (1-traffic) : (vehicle1_y'=0) + traffic : (vehicle1_y'=vehicle1_y);
+	[VERT_BLOCK2] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & VEHICLE1_VERTICAL_BORDER-> (1-traffic) : (vehicle1_y'=0) + traffic : (vehicle1_y'=vehicle1_y);
+	[TICK2] IS_VERTICAL1 & NOT_VEHICLE1_VERTICAL_BLOCKED & VEHICLE1_VERTICAL_BORDER-> (1-traffic) : (vehicle1_y'=0) + traffic : (vehicle1_y'=vehicle1_y);
+
+	//Vertical BLOCKED
+	[OFF1] IS_VERTICAL1 & VEHICLE1_VERTICAL_BLOCKED -> true;
+	[HOR_BLOCK1] IS_VERTICAL1 & VEHICLE1_VERTICAL_BLOCKED -> true;
+	[VERT_BLOCK1] IS_VERTICAL1 & VEHICLE1_VERTICAL_BLOCKED -> true;
+	[TICK1] IS_VERTICAL1 & VEHICLE1_VERTICAL_BLOCKED -> true;
+	
+	[OFF2] IS_VERTICAL1 & VEHICLE1_VERTICAL_BLOCKED -> true;
+	[HOR_BLOCK2] IS_VERTICAL1 & VEHICLE1_VERTICAL_BLOCKED -> true;
+	[VERT_BLOCK2] IS_VERTICAL1 & VEHICLE1_VERTICAL_BLOCKED -> true;
+	[TICK2] IS_VERTICAL1 & VEHICLE1_VERTICAL_BLOCKED -> true;
+
+	//###################CRASH, go to terminal state after crash (to correctly terminate environment in COOL-MC)
+	[OFF1] CRASH -> (done'=true);
+	[HOR_BLOCK1] CRASH -> (done'=true);
+	[VERT_BLOCK1] CRASH-> (done'=true);
+	[TICK1] CRASH -> (done'=true);
+	
+	[OFF2] CRASH-> (done'=true);
+	[HOR_BLOCK2] CRASH -> (done'=true);
+	[VERT_BLOCK2] CRASH -> (done'=true);
+	[TICK2] CRASH -> (done'=true);
+endmodule
+
+
+//#VEHICLE2
+
+//Vehicle 1 a horizontal car?
+formula IS_HORIZONTAL2 = (vehicle2_horizontal=true);
+formula IS_VERTICAL2 = (IS_HORIZONTAL2=false);
+//Vehicle 1 at horizontal border?
+formula VEHICLE2_HORIZONTAL_BORDER = (vehicle2_x=XMAX);
+formula NOT_VEHICLE2_HORIZONTAL_BORDER = (VEHICLE2_HORIZONTAL_BORDER=false);
+//Vehicle 1 at vertical border?
+formula VEHICLE2_VERTICAL_BORDER = (vehicle2_y=YMAX);
+formula NOT_VEHICLE2_VERTICAL_BORDER = (VEHICLE2_VERTICAL_BORDER=false);
+//Vehicle 1 horizontal blocked?
+formula VEHICLE2_HORIZONTAL_BLOCKED = (vehicle2_x=traffic_light1_x-1 & traffic_light1_status = 1) | (vehicle2_x=traffic_light2_x-1 & traffic_light2_status = 1);
+formula NOT_VEHICLE2_HORIZONTAL_BLOCKED = (VEHICLE2_HORIZONTAL_BLOCKED = false);
+//Vehicle 1 vertical blocked?
+formula VEHICLE2_VERTICAL_BLOCKED = (vehicle2_y=traffic_light1_y-1 & traffic_light1_status = 2) | (vehicle2_y=traffic_light2_y-1 & traffic_light2_status = 2);
+formula NOT_VEHICLE2_VERTICAL_BLOCKED = (VEHICLE2_VERTICAL_BLOCKED = false);
+
+
+
+
+module vehicle2
+	vehicle2_x: [0..XMAX] init 1;
+	vehicle2_y: [0..YMAX] init 0;
+	vehicle2_horizontal: bool init false;
+
+	//###################HORIZONTAL
+
+	//Horizontal movement
+	[OFF1] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & NOT_VEHICLE2_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_x'=vehicle2_x+1) + traffic : (vehicle2_x'=vehicle2_x);
+	[HOR_BLOCK1] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & NOT_VEHICLE2_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_x'=vehicle2_x+1) + traffic : (vehicle2_x'=vehicle2_x);
+	[VERT_BLOCK1] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & NOT_VEHICLE2_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_x'=vehicle2_x+1) + traffic : (vehicle2_x'=vehicle2_x);
+	[TICK1] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & NOT_VEHICLE2_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_x'=vehicle2_x+1) + traffic : (vehicle2_x'=vehicle2_x);
+
+	[OFF2] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & NOT_VEHICLE2_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_x'=vehicle2_x+1) + traffic : (vehicle2_x'=vehicle2_x);
+	[HOR_BLOCK2] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & NOT_VEHICLE2_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_x'=vehicle2_x+1) + traffic : (vehicle2_x'=vehicle2_x);
+	[VERT_BLOCK2] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & NOT_VEHICLE2_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_x'=vehicle2_x+1) + traffic : (vehicle2_x'=vehicle2_x);
+	[TICK2] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & NOT_VEHICLE2_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_x'=vehicle2_x+1) + traffic : (vehicle2_x'=vehicle2_x);
+
+
+	//Horizontal BORDER movement
+	[OFF1] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & VEHICLE2_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_x'=0) + traffic : (vehicle2_x'=vehicle2_x);
+	[HOR_BLOCK1] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & VEHICLE2_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_x'=0) + traffic : (vehicle2_x'=vehicle2_x);
+	[VERT_BLOCK1] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & VEHICLE2_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_x'=0) + traffic : (vehicle2_x'=vehicle2_x);
+	[TICK1] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & VEHICLE2_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_x'=0) + traffic : (vehicle2_x'=vehicle2_x);
+	
+	[OFF2] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & VEHICLE2_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_x'=0) + traffic : (vehicle2_x'=vehicle2_x);
+	[HOR_BLOCK2] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & VEHICLE2_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_x'=0) + traffic : (vehicle2_x'=vehicle2_x);
+	[VERT_BLOCK2] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & VEHICLE2_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_x'=0) + traffic : (vehicle2_x'=vehicle2_x);
+	[TICK2] IS_HORIZONTAL2 & NOT_VEHICLE2_HORIZONTAL_BLOCKED & VEHICLE2_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_x'=0) + traffic : (vehicle2_x'=vehicle2_x);
+
+	//Horizontal BLOCKED
+	[OFF1] IS_HORIZONTAL2 & VEHICLE2_HORIZONTAL_BLOCKED & NO_CRASH-> true;
+	[HOR_BLOCK1] IS_HORIZONTAL2 & VEHICLE2_HORIZONTAL_BLOCKED & NO_CRASH-> true;
+	[VERT_BLOCK1] IS_HORIZONTAL2 & VEHICLE2_HORIZONTAL_BLOCKED & NO_CRASH-> true;
+	[TICK1] IS_HORIZONTAL2 & VEHICLE2_HORIZONTAL_BLOCKED & NO_CRASH-> true;
+
+	[OFF2] IS_HORIZONTAL2 & VEHICLE2_HORIZONTAL_BLOCKED & NO_CRASH-> true;
+	[HOR_BLOCK2] IS_HORIZONTAL2 & VEHICLE2_HORIZONTAL_BLOCKED & NO_CRASH-> true;
+	[VERT_BLOCK2] IS_HORIZONTAL2 & VEHICLE2_HORIZONTAL_BLOCKED & NO_CRASH-> true;
+	[TICK2] IS_HORIZONTAL2 & VEHICLE2_HORIZONTAL_BLOCKED & NO_CRASH-> true;
+
+	
+	
+
+	//###################VERTICAL
+
+	//Vertical movement
+	[OFF1] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & NOT_VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=vehicle2_y+1) + traffic : (vehicle2_y'=vehicle2_y);
+	[HOR_BLOCK1] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & NOT_VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=vehicle2_y+1) + traffic : (vehicle2_y'=vehicle2_y);
+	[VERT_BLOCK1] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & NOT_VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=vehicle2_y+1) + traffic : (vehicle2_y'=vehicle2_y);
+	[TICK1] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & NOT_VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=vehicle2_y+1) + traffic : (vehicle2_y'=vehicle2_y);
+
+	[OFF2] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & NOT_VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=vehicle2_y+1) + traffic : (vehicle2_y'=vehicle2_y);
+	[HOR_BLOCK2] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & NOT_VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=vehicle2_y+1) + traffic : (vehicle2_y'=vehicle2_y);
+	[VERT_BLOCK2] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & NOT_VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=vehicle2_y+1) + traffic : (vehicle2_y'=vehicle2_y);
+	[TICK2] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & NOT_VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=vehicle2_y+1) + traffic : (vehicle2_y'=vehicle2_y);
+
+	//Vertical BORDER movement
+	[OFF1] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=0) + traffic : (vehicle2_y'=vehicle2_y);
+	[HOR_BLOCK1] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=0) + traffic : (vehicle2_y'=vehicle2_y);
+	[VERT_BLOCK1] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & VEHICLE2_VERTICAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_y'=0) + traffic : (vehicle2_y'=vehicle2_y);
+	[TICK1] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=0) + traffic : (vehicle2_y'=vehicle2_y);
+
+	[OFF2] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=0) + traffic : (vehicle2_y'=vehicle2_y);
+	[HOR_BLOCK2] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=0) + traffic : (vehicle2_y'=vehicle2_y);
+	[VERT_BLOCK2] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & VEHICLE2_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle2_y'=0) + traffic : (vehicle2_y'=vehicle2_y);
+	[TICK2] IS_VERTICAL2 & NOT_VEHICLE2_VERTICAL_BLOCKED & VEHICLE2_VERTICAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle2_y'=0) + traffic : (vehicle2_y'=vehicle2_y);
+
+	//Vertical BLOCKED
+	[OFF1] IS_VERTICAL2 & VEHICLE2_VERTICAL_BLOCKED & NO_CRASH-> true;
+	[HOR_BLOCK1] IS_VERTICAL2 & VEHICLE2_VERTICAL_BLOCKED & NO_CRASH -> true;
+	[VERT_BLOCK1] IS_VERTICAL2 & VEHICLE2_VERTICAL_BLOCKED & NO_CRASH-> true;
+	[TICK1] IS_VERTICAL2 & VEHICLE2_VERTICAL_BLOCKED & NO_CRASH-> true;
+	
+	[OFF2] IS_VERTICAL2 & VEHICLE2_VERTICAL_BLOCKED & NO_CRASH -> true;
+	[HOR_BLOCK2] IS_VERTICAL2 & VEHICLE2_VERTICAL_BLOCKED & NO_CRASH -> true;
+	[VERT_BLOCK2] IS_VERTICAL2 & VEHICLE2_VERTICAL_BLOCKED & NO_CRASH -> true;
+	[TICK2] IS_VERTICAL2 & VEHICLE2_VERTICAL_BLOCKED & NO_CRASH -> true;
+
+	//###################CRASH
+	[OFF1] CRASH -> true;
+	[HOR_BLOCK1] CRASH -> true;
+	[VERT_BLOCK1] CRASH-> true;
+	[TICK1] CRASH -> true;
+	
+	[OFF2] CRASH-> true;
+	[HOR_BLOCK2] CRASH -> true;
+	[VERT_BLOCK2] CRASH -> true;
+	[TICK2] CRASH -> true;
+endmodule
+
+//#VEHICLE3
+
+//Vehicle 1 a horizontal car?
+formula IS_HORIZONTAL3 = (vehicle3_horizontal=true);
+formula IS_VERTICAL3 = (IS_HORIZONTAL2=false);
+//Vehicle 1 at horizontal border?
+formula VEHICLE3_HORIZONTAL_BORDER = (vehicle3_x=XMAX);
+formula NOT_VEHICLE3_HORIZONTAL_BORDER = (VEHICLE3_HORIZONTAL_BORDER=false);
+//Vehicle 1 at vertical border?
+formula VEHICLE3_VERTICAL_BORDER = (vehicle3_y=YMAX);
+formula NOT_VEHICLE3_VERTICAL_BORDER = (VEHICLE3_VERTICAL_BORDER=false);
+//Vehicle 1 horizontal blocked?
+formula VEHICLE3_HORIZONTAL_BLOCKED = (vehicle3_x=traffic_light1_x-1 & traffic_light1_status = 1) | (vehicle3_x=traffic_light2_x-1 & traffic_light2_status = 1);
+formula NOT_VEHICLE3_HORIZONTAL_BLOCKED = (VEHICLE3_HORIZONTAL_BLOCKED = false);
+//Vehicle 1 vertical blocked?
+formula VEHICLE3_VERTICAL_BLOCKED = (vehicle3_y=traffic_light1_y-1 & traffic_light1_status = 2) | (vehicle3_y=traffic_light2_y-1 & traffic_light2_status = 2);
+formula NOT_VEHICLE3_VERTICAL_BLOCKED = (VEHICLE3_VERTICAL_BLOCKED = false);
+
+
+
+
+module vehicle3
+	vehicle3_x: [0..XMAX] init 2;
+	vehicle3_y: [0..YMAX] init 0;
+	vehicle3_horizontal: bool init false;
+
+	//###################HORIZONTAL
+
+	//Horizontal movement
+	[OFF1] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & NOT_VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=vehicle3_x+1) + traffic : (vehicle3_x'=vehicle3_x);
+	[HOR_BLOCK1] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & NOT_VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=vehicle3_x+1) + traffic : (vehicle3_x'=vehicle3_x);
+	[VERT_BLOCK1] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & NOT_VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=vehicle3_x+1) + traffic : (vehicle3_x'=vehicle3_x);
+	[TICK1] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & NOT_VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=vehicle3_x+1) + traffic : (vehicle3_x'=vehicle3_x);
+
+	[OFF2] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & NOT_VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=vehicle3_x+1) + traffic : (vehicle3_x'=vehicle3_x);
+	[HOR_BLOCK2] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & NOT_VEHICLE3_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle3_x'=vehicle3_x+1) + traffic : (vehicle3_x'=vehicle3_x);
+	[VERT_BLOCK2] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & NOT_VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=vehicle3_x+1) + traffic : (vehicle3_x'=vehicle3_x);
+	[TICK2] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & NOT_VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=vehicle3_x+1) + traffic : (vehicle3_x'=vehicle3_x);
+
+
+	//Horizontal BORDER movement
+	[OFF1] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=0) + traffic : (vehicle3_x'=vehicle3_x);
+	[HOR_BLOCK1] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=0) + traffic : (vehicle3_x'=vehicle3_x);
+	[VERT_BLOCK1] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=0) + traffic : (vehicle3_x'=vehicle3_x);
+	[TICK1] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=0) + traffic : (vehicle3_x'=vehicle3_x);
+	
+	[OFF2] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & VEHICLE3_HORIZONTAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_x'=0) + traffic : (vehicle3_x'=vehicle3_x);
+	[HOR_BLOCK2] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & VEHICLE3_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle3_x'=0) + traffic : (vehicle3_x'=vehicle3_x);
+	[VERT_BLOCK2] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & VEHICLE3_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle3_x'=0) + traffic : (vehicle3_x'=vehicle3_x);
+	[TICK2] IS_HORIZONTAL3 & NOT_VEHICLE3_HORIZONTAL_BLOCKED & VEHICLE3_HORIZONTAL_BORDER & NO_CRASH-> (1-traffic) : (vehicle3_x'=0) + traffic : (vehicle3_x'=vehicle3_x);
+
+	//Horizontal BLOCKED
+	[OFF1] IS_HORIZONTAL3 & VEHICLE3_HORIZONTAL_BLOCKED & NO_CRASH -> true;
+	[HOR_BLOCK1] IS_HORIZONTAL3 & VEHICLE3_HORIZONTAL_BLOCKED & NO_CRASH -> true;
+	[VERT_BLOCK1] IS_HORIZONTAL3 & VEHICLE3_HORIZONTAL_BLOCKED & NO_CRASH -> true;
+	[TICK1] IS_HORIZONTAL3 & VEHICLE3_HORIZONTAL_BLOCKED & NO_CRASH -> true;
+
+	[OFF2] IS_HORIZONTAL3 & VEHICLE3_HORIZONTAL_BLOCKED & NO_CRASH -> true;
+	[HOR_BLOCK2] IS_HORIZONTAL3 & VEHICLE3_HORIZONTAL_BLOCKED & NO_CRASH -> true;
+	[VERT_BLOCK2] IS_HORIZONTAL3 & VEHICLE3_HORIZONTAL_BLOCKED & NO_CRASH -> true;
+	[TICK2] IS_HORIZONTAL3 & VEHICLE3_HORIZONTAL_BLOCKED & NO_CRASH -> true;
+
+	
+	
+
+	//###################VERTICAL
+
+	//Vertical movement
+	[OFF1] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & NOT_VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=vehicle3_y+1) + traffic : (vehicle3_y'=vehicle3_y);
+	[HOR_BLOCK1] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & NOT_VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=vehicle3_y+1) + traffic : (vehicle3_y'=vehicle3_y);
+	[VERT_BLOCK1] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & NOT_VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=vehicle3_y+1) + traffic : (vehicle3_y'=vehicle3_y);
+	[TICK1] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & NOT_VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=vehicle3_y+1) + traffic : (vehicle3_y'=vehicle3_y);
+
+	[OFF2] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & NOT_VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=vehicle3_y+1) + traffic : (vehicle3_y'=vehicle3_y);
+	[HOR_BLOCK2] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & NOT_VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=vehicle3_y+1) + traffic : (vehicle3_y'=vehicle3_y);
+	[VERT_BLOCK2] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & NOT_VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=vehicle3_y+1) + traffic : (vehicle3_y'=vehicle3_y);
+	[TICK2] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & NOT_VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=vehicle3_y+1) + traffic : (vehicle3_y'=vehicle3_y);
+
+	//Vertical BORDER movement
+	[OFF1] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=0) + traffic : (vehicle3_y'=vehicle3_y);
+	[HOR_BLOCK1] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=0) + traffic : (vehicle3_y'=vehicle3_y);
+	[VERT_BLOCK1] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=0) + traffic : (vehicle3_y'=vehicle3_y);
+	[TICK1] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=0) + traffic : (vehicle3_y'=vehicle3_y);
+
+	[OFF2] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=0) + traffic : (vehicle3_y'=vehicle3_y);
+	[HOR_BLOCK2] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=0) + traffic : (vehicle3_y'=vehicle3_y);
+	[VERT_BLOCK2] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=0) + traffic : (vehicle3_y'=vehicle3_y);
+	[TICK2] IS_VERTICAL3 & NOT_VEHICLE3_VERTICAL_BLOCKED & VEHICLE3_VERTICAL_BORDER & NO_CRASH -> (1-traffic) : (vehicle3_y'=0) + traffic : (vehicle3_y'=vehicle3_y);
+
+	//Vertical BLOCKED
+	[OFF1] IS_VERTICAL3 & VEHICLE3_VERTICAL_BLOCKED & NO_CRASH-> true;
+	[HOR_BLOCK1] IS_VERTICAL3 & VEHICLE3_VERTICAL_BLOCKED & NO_CRASH-> true;
+	[VERT_BLOCK1] IS_VERTICAL3 & VEHICLE3_VERTICAL_BLOCKED & NO_CRASH-> true;
+	[TICK1] IS_VERTICAL3 & VEHICLE3_VERTICAL_BLOCKED & NO_CRASH-> true;
+	
+	[OFF2] IS_VERTICAL3 & VEHICLE3_VERTICAL_BLOCKED & NO_CRASH-> true;
+	[HOR_BLOCK2] IS_VERTICAL3 & VEHICLE3_VERTICAL_BLOCKED & NO_CRASH-> true;
+	[VERT_BLOCK2] IS_VERTICAL3 & VEHICLE3_VERTICAL_BLOCKED & NO_CRASH-> true;
+	[TICK2] IS_VERTICAL3 & VEHICLE3_VERTICAL_BLOCKED & NO_CRASH-> true;
+
+	//###################CRASH
+	[OFF1] CRASH -> true;
+	[HOR_BLOCK1] CRASH -> true;
+	[VERT_BLOCK1] CRASH-> true;
+	[TICK1] CRASH -> true;
+	
+	[OFF2] CRASH-> true;
+	[HOR_BLOCK2] CRASH -> true;
+	[VERT_BLOCK2] CRASH -> true;
+	[TICK2] CRASH -> true;
+	
+endmodule
+
+
+formula CRASH = (vehicle1_x = vehicle2_x & vehicle1_y = vehicle2_y) | (vehicle1_x = vehicle3_x & vehicle1_y = vehicle3_y);
+formula NO_CRASH = (CRASH = false);
+
+module traffic_light1
+	traffic_light1_x: [0..XMAX] init 1;
+	traffic_light1_y: [0..YMAX] init 2;
+	traffic_light1_status : [0..2] init 0; //0 OFF, 1 HOR_BLOCK, 2 VERT_BLOCK
+
+	[OFF1] NO_CRASH-> (traffic_light1_status'=0);
+	[HOR_BLOCK1] NO_CRASH -> (traffic_light1_status'=1);
+	[VERT_BLOCK1] NO_CRASH -> (traffic_light1_status'=2);
+	[TICK1] NO_CRASH -> true;
+
+endmodule
+
+formula TRAFFIC_LIGHT1_ON = traffic_light1_status > 0;
+formula TRAFFIC_LIGHT1_OFF = (TRAFFIC_LIGHT1_ON = false);
+
+module traffic_light2
+	traffic_light2_x: [0..XMAX] init 2;
+	traffic_light2_y: [0..YMAX] init 2;
+	traffic_light2_status : [0..2] init 0; //0 OFF, 1 HOR_BLOCK, 2 VERT_BLOCK
+
+	[OFF2] NO_CRASH -> (traffic_light2_status'=0);
+	[HOR_BLOCK2] NO_CRASH -> (traffic_light2_status'=1);
+	[VERT_BLOCK2] NO_CRASH-> (traffic_light2_status'=2);
+	[TICK2] NO_CRASH -> true;
+
+endmodule
+
+formula TRAFFIC_LIGHT2_ON = traffic_light2_status > 0;
+formula TRAFFIC_LIGHT2_OFF = (TRAFFIC_LIGHT2_ON = false);
+
+
+
+rewards
+	//ALL TRAFFIC LIGHTS OFF
+	[OFF1] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_OFF : 0;
+	[HOR_BLOCK1] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_OFF : 0;
+	[VERT_BLOCK1] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_OFF : 0;
+	[TICK1] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_OFF : 0;
+	[OFF2] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_OFF : 0;
+	[HOR_BLOCK2] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_OFF : 0;
+	[VERT_BLOCK2] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_OFF : 0;
+	[TICK2] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_OFF : 0;
+	//First On
+	[OFF1] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_OFF : 10;
+	[HOR_BLOCK1] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_OFF : 10;
+	[VERT_BLOCK1] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_OFF : 10;
+	[TICK1] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_OFF : 10;
+	[OFF2] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_OFF : 10;
+	[HOR_BLOCK2] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_OFF : 10;
+	[VERT_BLOCK2] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_OFF : 10;
+	[TICK2] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_OFF : 10;
+	//Second On
+	[OFF1] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_ON : 10;
+	[HOR_BLOCK1] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_ON : 10;
+	[VERT_BLOCK1] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_ON : 10;
+	[TICK1] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_ON : 10;
+	[OFF2] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_ON : 10;
+	[HOR_BLOCK2] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_ON : 10;
+	[VERT_BLOCK2] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_ON : 10;
+	[TICK2] TRAFFIC_LIGHT1_OFF & TRAFFIC_LIGHT2_ON : 10;
+	//Both On
+	[OFF1] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_ON : 20;
+	[HOR_BLOCK1] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_ON : 20;
+	[VERT_BLOCK1] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_ON : 20;
+	[TICK1] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_ON : 20;
+	[OFF2] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_ON : 20;
+	[HOR_BLOCK2] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_ON : 20;
+	[VERT_BLOCK2] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_ON : 20;
+	[TICK2] TRAFFIC_LIGHT1_ON & TRAFFIC_LIGHT2_ON : 20;
+	//Crash
+	[OFF1] CRASH : 200;
+	[HOR_BLOCK1] CRASH : 200;
+	[VERT_BLOCK1] CRASH : 200;
+	[TICK1] CRASH : 200;
+	[OFF2] CRASH : 200;
+	[HOR_BLOCK2] CRASH : 200;
+	[VERT_BLOCK2] CRASH : 200;
+	[TICK2] CRASH : 200;
+endrewards
+
+label "crash" = CRASH;
+
+
