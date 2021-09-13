@@ -7,7 +7,7 @@ At the heart is a tight integration of learning and verification that involves, 
 We evaluate our tool-chain on multiple commonly use
 
 ## Build the Docker
-Build the container via `sudo docker build -t coolmc .`
+Build the container via `docker build -t coolmc .`
 
 
 ## First Steps
@@ -54,7 +54,7 @@ If possible,we also give the user the possibility to calculate the optimal polic
 ## Example 1 (Frozen Lake)
 To demonstrate our tool, we are going to train a near optimal RL policy for the commonly known frozen lake environment.
 1. Create via `mkdir projects` the empty project folder in the root of COOL-MC.
-2. Start the interactive container and mount the PRISM and project folder: Run `sudo docker run -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
+2. Start the interactive container and mount the PRISM and project folder: Run `docker run -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
 3. Execute `bash example_1.sh`.
 
 `bash example_1.sh` executes five commands. 
@@ -87,7 +87,7 @@ By changing `task decision_tree` to `task attention_training` we are able to tra
 ## Example 2 (Taxi)
 To demonstrate our tool, we are going to train a near optimal RL policy for the commonly known taxi environment.
 1. Create via `mkdir projects` the empty project folder in the root of COOL-MC.
-2. Start the interactive container and mount the PRISM and project folder: Run `sudo docker run -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
+2. Start the interactive container and mount the PRISM and project folder: Run `docker run -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
 3. Execute `bash example_2.sh`.
 
 `bash example_2.sh` executes five commands.
