@@ -1,12 +1,10 @@
 # Comprehensive tOOl for Learning and Model Checking (COOL-MC)
-Correctness is an essential component for training and deploying reinforcement learning policies in complex real-world scenarios.
-Probabilistic model checking offers a powerful tool for establishing the correctness of these stochastic systems.
-Until now, the technical obstacles of combining probabilistic model checking with deep reinforcement learning were large.
-Our easy-to-use model checking tool-chain unifies the powerful toolset of model checking, interpretable machine learning, and deep reinforcement learning.
-It gives crucial information to the RL engineer to deploy his trained deep RL policy.
-Our tool-chain checks property specifications, e.g., safety and reward properties,
-by inducing a deep RL policy into an environment modeled as a Markov decision process. 
-We evaluate our tool-chain on multiple commonly used reinforcement learning benchmarks, quantitative verification benchmarks, and show that our tool can provide useful insights for RL engineers.
+Safety is a major issue of reinforcement learning (RL) in complex real-world scenarios.
+In recent years, formal verification has increasingly been used to provide rigorous safety guarantees for RL.
+However, until now, major technical obstacles for combining probabilistic model checking with, in particular deep RL, remain.
+Our easy-to-use tool-chain COOL-MC unifies the powerful toolset of model checking, interpretable machine learning, and deep RL.
+At the heart is a tight integration of learning and verification that involves, amongst others, (1) the incremental building of state spaces, (2) mapping of policies obtained from state-of-the-art deep RL to formal models, and (3) the use of features from interpretable and explainable machine learning such as decision trees and attention maps.
+We evaluate our tool-chain on multiple commonly use
 
 ## Build the Docker
 Build the container via `sudo docker build -t coolmc .`
