@@ -10,7 +10,7 @@ WORKDIR /storm
 RUN mkdir build
 WORKDIR /storm/build
 RUN cmake ..
-RUN make
+RUN make -j 1
 WORKDIR /
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     maven \
