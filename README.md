@@ -243,8 +243,38 @@ Note: Experiments which RAN OUT OF MEMORY or TIME OUTs are commented out.
 You can build the container via `docker build -t coolmc .` It is also possible for UNIX users to run the bash script in the bin-folder.
 
 ### Installing the tool
+Switch to the repository folder and define environment variable `COOL_MC="$PWD"`
 
-```
-pip install -r requirements.txt
-mkdir projects
-```
+#### (1) Install Dependencies
+`sudo apt-get update && sudo apt-get -y install build-essential git cmake libboost-all-dev libcln-dev libgmp-dev libginac-dev automake libglpk-dev libhwloc-dev libz3-dev libxerces-c-dev libeigen3-dev python3 python-is-python3 python3-setuptools python3-pip graphviz && sudo apt-get install -y --no-install-recommends maven uuid-dev virtualenv`
+
+#### (2) Install Storm
+0. `cd $COOL_MC`
+1. `git clone https://github.com/moves-rwth/storm.git`
+2. `cd storm`
+3. `mkdir build`
+4. `cd build`
+5. `cmake ..`
+6. `make -j 1`
+
+#### (3) Install PyCarl
+0. `cd $COOL_MC`
+1. `git clone https://github.com/moves-rwth/pycarl.git`
+2. `cd pycarl`
+3. `python setup.py build_ext --jobs 1 develop`
+
+If permission problems: `sudo chmod 777 /usr/local/lib/python3.8/dist-packages/` and run third command again.
+
+
+#### (4) Install StormPy
+
+0. `cd $COOL_MC`
+1. `git clone https://github.com/moves-rwth/stormpy.git`
+2. `cd stormpy`
+3. `python setup.py build_ext --storm-dir ~/storm/build/ --jobs 1 develop`
+
+#### (5) Install remaining python packages and create project folder
+0. `cd $COOL_MC`
+1. `pip install -r requirements.txt`
+2. `mkdir projects`
+
