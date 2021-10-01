@@ -46,6 +46,7 @@ class ModelChecker():
             for _key in example_json.keys():
                 if key == _key:
                     state[key] = state_valuation_json[key]
+        
         return state
 
     def __get_action_for_state(self, env, agent, state_dict):
@@ -65,7 +66,7 @@ class ModelChecker():
         return env.action_mapper.actions[action_step.action]
 
 
-    def induced_markov_chain(self, agent, env, formula_str = 'Rmin=? [LRA]'):
+    def induced_markov_chain(self, agent, env, constant_definitions, formula_str = 'Rmin=? [LRA]'):
         '''
         Creates a markov chain of an MDP induced by a Policy and analyze the policy
         :param agent: agent
@@ -87,7 +88,7 @@ class ModelChecker():
                     i+=1
 
         prism_program = stormpy.preprocess_symbolic_input(
-            prism_program, [], env.storm_bridge.constant_definitions)[0].as_prism_program()
+            prism_program, [], constant_definitions)[0].as_prism_program()
         
        
         prism_program = prism_program.label_unlabelled_commands(suggestions)

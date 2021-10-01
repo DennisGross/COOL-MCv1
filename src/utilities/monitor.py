@@ -37,4 +37,23 @@ class Monitor:
     def monitor_model_checking(self, formula_str, prop_result, model_size, model_checking_time):
          print("\rProperty Result: {} with Model Size: {} checked in {} seconds\n".format(prop_result, model_size, model_checking_time), end="")
 
+    def plot_prop_ranges(self,prop_results, range_tuple, xlabel, formula_str, project_folder):
+        import matplotlib.pyplot as plt
+        import numpy as np
+
+        # Data for plotting
+        x = np.arange(range_tuple[0], range_tuple[2], range_tuple[1])
+        y = np.array(prop_results)
+
+        fig, ax = plt.subplots()
+        ax.plot(x,y)
+
+        ax.set(xlabel=xlabel, ylabel=formula_str,
+            title='Properties')
+        ax.grid()
+
+        fig.savefig(os.path.join(project_folder, "properties.png"))
+        plt.show()
+
+
 

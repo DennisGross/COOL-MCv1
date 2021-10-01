@@ -36,6 +36,7 @@ class StormBridge:
         :return state_json_example
         '''
         dummy_state = {}
+        json_example = str(json_example)
         for k in json.loads(json_example):
             if k in self.disabled_features:
                 continue
@@ -92,7 +93,13 @@ class StormBridge:
         if action_name not in current_available_actions:
             action_name = current_available_actions[0]
             penalty = -self.wrong_action_penalty
-        self._state, self.reward = self.simulator.step(action_name)
+       
+        data = self.simulator.step(action_name)
+        self._state = str(data[0])
+        self.reward = data[1]
+        #self._state, self.reward = self.simulator.step(action_name)
+        
+        
         self._state = self.parse_state(self._state)
         self.reward = self.reward[0]
         if self.reward_flag==False:
@@ -106,7 +113,10 @@ class StormBridge:
         Reset simulator
         :return state
         '''
-        _state, reward = self.simulator.restart()
+        data = self.simulator.restart()
+        #_state, reward = self.simulator.restart()
+        _state = str(data[0])
+        reward = data[1]
         self._state = self.parse_state(str(_state))
         return self._state
 

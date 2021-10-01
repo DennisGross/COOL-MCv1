@@ -38,7 +38,7 @@ def train(project, monitor, num_episodes, num_evals):
             model_checking_time = None
             checking_time = None
             if project.report['reward_training'] == False:
-                prop_result, model_size, model_checking_time, checking_time = project.environment.storm_bridge.model_checker.induced_markov_chain(project.agent, project.environment, project.report['prop'])
+                prop_result, model_size, model_checking_time, checking_time = project.environment.storm_bridge.model_checker.induced_markov_chain(project.agent, project.environment, project.environment.storm_bridge.constant_definitions, project.report['prop'])
             if project.report['prop_result'] == None or project.report['prop_type'] == 'min_prop' and prop_result < project.report['prop_result'] or project.report['prop_type'] == 'max_prop' and prop_result >project.report['prop_result'] or project.report['prop_type'] == 'max_reward' and max(all_returns) >= project.report['return'] or project.report['prop_type'] == 'min_reward' and min(all_returns) <= project.report['return']:
                 reporter.write_best_results(prop_result, all_returns, model_size, model_checking_time, episode, checking_time, project.report['prop_type'])
                 # Save Agent

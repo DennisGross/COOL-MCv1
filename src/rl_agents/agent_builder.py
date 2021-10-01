@@ -5,6 +5,7 @@ from src.rl_agents.hill_climbing_agent import HillClimbingAgent
 from src.rl_agents.reinforce_agent import ReinforceAgent
 from src.rl_agents.random_agent import RandomAgent
 from src.rl_agents.decision_tree_agent import DecisionTreeAgent
+from src.rl_agents.attention_autoencoder_agent import *
 
 '''
 HOW TO ADD MORE AGENTS?
@@ -49,4 +50,9 @@ class AgentBuilder():
     def build_decision_tree_agent(project_folder, environment):
         agent = DecisionTreeAgent(environment)
         agent.load(project_folder)
+        return agent
+
+    @staticmethod
+    def build_attention_autoencoder_agent(project, autoencoder):
+        agent = AttentionAutoencoderAgent(project, autoencoder)
         return agent

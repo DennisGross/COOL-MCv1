@@ -4,13 +4,109 @@ In recent years, formal verification has increasingly been used to provide rigor
 However, until now, major technical obstacles for combining probabilistic model checking with, in particular deep RL, remain.
 Our easy-to-use tool-chain COOL-MC unifies the powerful toolset of model checking, interpretable machine learning, and deep RL.
 At the heart is a tight integration of learning and verification that involves, amongst others, (1) the incremental building of state spaces, (2) mapping of policies obtained from state-of-the-art deep RL to formal models, and (3) the use of features from interpretable and explainable machine learning such as decision trees and attention maps.
-We evaluate our tool-chain on multiple commonly use
+We evaluate our tool-chain on multiple commonly use.
 
-## Build the Docker
-Build the container via `docker build -t coolmc .`
+##### Content
+1. Getting Started with COOL-MC
+2. Example 1 (Frozen Lake)
+3. Example 2 (Taxi)
+4. General Pipeline
+5. RL Agent Training
+6. RL Model Checking
+7. RL Policy Interpretation
+8. RL Policy Decision Explaination
+9. Storm Model Checking
+10. Command Line Arguments
+11. Benchmarking
+12. Manual Installation
+
+## Getting Started with COOL-MC
+We assume that you have docker installed and that you run the following commands in the root of this repository:
+1. Download the docker container [here](https://drive.google.com/file/d/1X_3UERGPepC76MI060_VJkJXiEkA5MI3/view?usp=sharing).
+2. Load the docker container: `docker load --input coolmc.tar`
+3. Create a project folder: `mkdir projects`
+4. Run the docker container: `docker run --user "$(id -u):$(id -g)" -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
+
+We discuss how to create the docker container yourself, and how to install the tool natively later.
+
+## Example 1 (Frozen Lake)
+To demonstrate our tool, we are going to train a near optimal RL policy for the commonly known frozen lake environment.
+The goal is to get familar with our tool and being able to use all our supported features.
+1. Start the interactive container and mount the PRISM and project folder: Run `docker run --user "$(id -u):$(id -g)" -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
+2. Execute `bash example_1.sh`.
+
+`python cool_mc.py --task training --architecture dqn --max_steps 20 --prism_file_path frozen_lake_4x4.prism --constant_definitions "slippery=0.04" --prop 'Pmax=? [F "water"]' --prop_type "min_prop" --project_name exp01_FL_4x4 --num_episodes 10000 --eval_interval 250`
+
+This first command trains a RL agent to get a near optimal policy to reach the frisbee and without falling into the water. The `task` parameter sets the COOL-MC into training mode (reinforcement learning) and the `architecture` the RL algorithm (in this example: deep q-learning). The `max_steps` parameter is needed to terminate the environment after a given number of steps (in this case 20). With the `prism_file_path` parameter, we inform COOL-MC on which environment we want to train our agent. The `constant_definitions` defines the constants of the environment. The `prop` parameter is the property specification, which we want to query while training. `prop_type` that we want to optimize for minimizing the property result. The `project_name` parameter names the project. `num_episodes` defines the number of epochs and `eval_interval` the interval of evaluation and property querying.
 
 
-## First Steps
+COOL-MC gives us the possibility to monitor the training progress via tensorboard (if installed):
+
+`tensorboard --logdir projects # Execute this command on your local machine`. 
+
+After 10000 epochs, we gain a RL policy with roughly 5% probability of falling into the water. Since the frozen lake environment is quite small, we can check the optimal probability of falling into the water by modifying `task training` to `task storm_model_checking` and removing unecessary parameters. This allows us to use Storm directly:
+
+`python cool_mc.py --task storm_model_checking --prism_file_path frozen_lake_4x4.prism --constant_definitions "slippery=0.04" --prop 'Pmax=? [F "water"] --project_name exp01_FL_4x4`
+
+By changing `task storm_model_checking` to `task rl_model_checking` we are able to do model checking with the trained RL policy:
+
+`python cool_mc.py --task rl_model_checking --prism_file_path frozen_lake_4x4.prism --constant_definitions "slippery=0.04" --prop 'Pmax=? [F "water"] --project_name exp01_FL_4x4`
+
+By changing `task rl_model_checking` to `task decision_tree` we are able to interprete the trained policy via a decision tree:
+
+`python cool_mc.py --task decision_tree --prism_file_path frozen_lake_4x4.prism --project_name example1 --constant_definitions "slippery=0.04" --architecture dqn --prop 'Pmax=? [F "water"]'`
+
+We can find the decision tree plot inside the project folder.
+
+![Decision Tree](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/decision_tree.png)
+*Decision Tree Policy Interpretation of RL policy of example 1.*
+
+After training the decision tree, we can use `task dt_model_checking` to model check the decision tree policy:
+
+`python cool_mc.py --task dt_model_checking --prism_file_path frozen_lake_4x4.prism --project_name example1 --constant_definitions "slippery=0.04"`
+
+By changing `task dt_model_checking` to `task attention_training` we are able to train an explainable model for our trained RL policy. Now it is possible to see which features influence the RL policy decision for a certain state:
+
+`python cool_mc.py --task attention_training --project_name example1 --constant_definitions "slippery=0.1"`
+
+`python cool_mc.py --task attention_mapping --project_name example1 --constant_definitions "slippery=0.1" attention_input "x=0,y=2"`
+
+You can find the attention mapping plot in the project folder:
+
+![Attention Map Plot](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/attention_map.png)
+*Attention Map of a RL policy.*
+
+If we interested in how our RL agent performs over a range of different environment initializations, we can use the following command:
+
+`python3.8 cool_mc.py --task rl_model_checking --project_name example1 --constant_definitions "slippery=[0.1;0.1;1]" --prop 'Pmin=? [F "water"]'`
+
+![Properties over a range of Constant definition](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/properties.png)
+
+*A plot that visualize how different constant definitions influence the safety property of the trained RL policy.*
+
+## Example 2 (Taxi)
+To demonstrate our tool, we are going to train a near optimal RL policy for the commonly known taxi environment.
+1. Start the interactive container and mount the PRISM and project folder: Run `docker run --user "$(id -u):$(id -g)" -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
+2. Execute `bash example_2.sh`.
+
+`bash example_2.sh` executes five commands.
+
+The first command trains a DQN policy on the taxi environment and queries every 500 epochs the probability of finishing two jobs.
+
+The second command uses Storm to get the optimal probability of finishing two jobs.
+
+The third command uses the trained DQN policy to get the probability of finishing two jobs.
+
+The fourth command generates an interpretable decision tree policy of the trained DQN policy.
+
+The fifth command uses the interpretable decision tree policy to get the probability of finishing two jobs.
+
+The sixth command trains an attention autoencoder for the explainability of the DQN policy.
+
+With command 7, it is possible to see which state variables influence the DQN decision for the given input (explainable reinforcement learning).
+
+
+## General Pipeline
 We first have to model our RL environment. COOL-MC supports PRISM as modeling language.
 It can be difficult to design own PRISM environments.
 Here are some tips how to make sure that your PRISM environment works correctly with COOL-MC:
@@ -46,62 +142,109 @@ This allows us to verify the RL policy in a much smaller DTMC as with Storm.
 ## RL Policy Interpretation
 Another toolset that helps us to make machine learning modelssafer is called interpretable machine learning. It refers to methods and modelsthat make the behavior and predictions of machine learning systems understand-able. We make our trained RL policy interpretable by training a decision treeas  surrogate  model.
 
+
+
 ## RL Policy Decision Explaination
 Humans  want  to  understand  adecision or at least they want to get an explanation for certain decisions. There-fore, COOL-MC also supports attention mapping which is a explainable machinelearning method. For that, we first train an auto encoder with attention lay-ers as a surrogate model of the trained RL policy
 
+
+
 ## Storm Model Checking
 If possible,we also give the user the possibility to calculate the optimal policy of the PRISMenvironment via Storm.
-## Example 1 (Frozen Lake)
-To demonstrate our tool, we are going to train a near optimal RL policy for the commonly known frozen lake environment.
-1. Create via `mkdir projects` the empty project folder in the root of COOL-MC.
-2. Start the interactive container and mount the PRISM and project folder: Run `docker run -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
-3. Execute `bash example_1.sh`.
-
-`bash example_1.sh` executes five commands. 
-
-The first command trains a RL agent to get a near optimal policy.
-It contains the most important command arguments for the execution of the RL training process.
-- `task training` specifies the task.
-- `prism_file_path frozen_lake_4x4.prism` specifies the environment.
-- `constant_definitions "slippery=0.1"` specifies the constants for the environment.
-- `project_name example1` specifies the name of the project. 
-- `architecture dqn` specifies the RL algorithm
-- `num_episodes 10000` specifies the training epochs
-- `eval_interval 500` specifies the evaluation epoch intervals
-- `prop 'Pmax=? [F "water"]'` specifies the property specification which we want to check while training.
-- `prop_type "min_prop"` specifies if we want to save policies that minimize/maximize the property specification or policies that minimize/maximize rewards.
-
-COOL-MC gives us the possibility to monitor the training progress via tensorboard:
-`tensorboard --logdir projects # Execute this command on your local machine`. 
-After 10000 epochs, we gain a RL policy with roughly 5% probability of falling into the water. Since the frozen lake environment is quite small, we can check the optimal probability of falling into the water by modifying `task training` to `task storm_model_checking` (second command).
-
-By changing `task storm_model_checking` to `task rl_model_checking` we are able to model check the trained RL policy (third command).
-
-By changing `task rl_model_checking` to `task decision_tree` we are able to interprete the trained policy via a decision tree (fourth command).
-
-By changing `task rl_model_checking` to `task decision_tree` we are able to interprete the trained policy via a decision tree (fourth command). We can find the decision tree plot inside the project folder.
-
-By changing `task decision_tree` to `task attention_training` we are able to train an explainable model for our trained RL policy. Now it is possible to see which features influence the RL policy decision for a certain state. You can find the attention mapping plot in the project folder.
 
 
-## Example 2 (Taxi)
-To demonstrate our tool, we are going to train a near optimal RL policy for the commonly known taxi environment.
-1. Create via `mkdir projects` the empty project folder in the root of COOL-MC.
-2. Start the interactive container and mount the PRISM and project folder: Run `docker run -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
-3. Execute `bash example_2.sh`.
-
-`bash example_2.sh` executes five commands.
-
-It contains the following command arguments for the execution of the RL training process.
-- `task training` specifies the task.
-- `prism_file_path taxi_distance_reward.prism` specifies the environment.
-- `constant_definitions "passenger_location_x=0,passenger_location_y=4,passenger_destination_x=0,passenger_destination_y=0,MAX_JOBS=2"` specifies the constants for the environment.
-- `project_name example2` specifies the name of the project. 
-- `architecture dqn` specifies the RL algorithm
-- `num_episodes 10000` specifies the training epochs
-- `eval_interval 500` specifies the evaluation epoch intervals
-- `prop 'Pmax=? [F jobs_done=2]'` specifies the property specification which we want to check while training.
-- `prop_type "max_prop"` specifies if we want to save policies that minimize/maximize the property specification or policies that minimize/maximize rewards.
+## Command Line Arguments
+The following list contains all the major COOL-MC command line arguments.
+It does not contain the arguments which are related to the RL algorithms.
+For a detailed description, we refer to the src.rl_agents package.
 
 
+### Task
+`task` specifies the task: 
+- Reinforcement Learning (training)
+- RL Model Checking (rl_model_checking)
+- Storm Model Checking (storm_model_checking)
+- Attention Training (attention_training)
+- Attention Map Plotting (attention_mapping)
+- decision tree training (decision_tree)
 
+### prism_dir
+Specifies the folder with all PRISM files.
+
+### prism_file_path
+Specifies the path of the PRISM file inside the prism file folder.
+
+### project_dir
+Specifies the folder with the COOL-MC projects.
+
+### project_name
+Specifies the current COOL-MC project name and saves it inside the `project_dir` folder.
+
+### constant_definitions
+Constant definitions for the environments. Examples:
+- x=0.2
+- x=0.3,y=1
+- x=4,y=3,z=3
+- x=[0,3,30],y=3 with a range of x-values from 0 until 27 with step size of 3.
+
+### max_steps
+Specifies the maximal number of allowed steps inside the environment.
+
+### reward_training
+If true, it disables the property querying.
+
+### reward_flag
+If true, the agent receives rewards instead of penalties.
+
+### wrong_action_penalty
+Penaly of choosing wrong actions.
+
+### architecture
+Specifies the agent algorithm (investigate src.rl_agents.agent_builder for supported agents).
+
+### num_episodes
+Specifies the number of learning episodes.
+
+### num_spervised_epochs
+Specifies the number of supervised learning episodes (necessary for interpretable/explainable machine learning).
+
+### eval_interval
+Specifies the evaluation interval of the RL policy.
+
+### prop
+Specifies the property specification.
+
+### prop_type
+Optimizes the RL policy for Maximal Reward (max_reward), Minimal Reward (min_reward), Property minimization (min_prop) or maximization (max_prop).
+
+### disabled_features
+Features which should not be used by the RL agent: FEATURE1,FEATURE2,...
+
+### attention_input
+Input for attention map plotting.
+
+
+## Benchmarking
+We tested our tool on a variety of benchmarks to compare PRISM modeling styles, COOL-MC features, and scalability.
+The results of these experiments are described in our paper. To reproduce our results, run the following shell scripts:
+
+- Run `bash experiments_frozen_lake.sh` to reproduce the comparison of multiple RL algorithms in the frozen lake environment.
+- Run `bash experiments_taxi.sh` to reproduce the taxi environment experiments.
+- Run `bash experiments_smart_grid.sh` to reproduce the smart grid environment experiments.
+- Run `bash experiments_qcomp.sh` to verify that the QComp benchmarks with reward functions are working.
+- Run `bash experiments_modified_qcomp.sh` to verify that the QComp benchmarks with dummy reward functions are working.
+
+Note: Experiments which RAN OUT OF MEMORY or TIME OUTs are commented out.
+
+## Manual Installation
+
+### Creating the Docker
+
+You can build the container via `docker build -t coolmc .` It is also possible for UNIX users to run the bash script in the bin-folder.
+
+### Installing the tool
+
+```
+pip install -r requirements.txt
+mkdir projects
+```

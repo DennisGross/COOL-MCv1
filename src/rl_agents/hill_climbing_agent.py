@@ -1,21 +1,21 @@
+
+
 import numpy as np
 from src.rl_agents.agent import Agent
 from tf_agents.trajectories import PolicyStep
 import tensorflow as tf
 import os
-
-
 class HillClimbingAgent(Agent):
 
-    def __init__(self, state_size, number_of_actions, gamma, noise_scale):
+    def __init__(self, state_dimension, number_of_actions, gamma, noise_scale):
         super().__init__()
-        self.state_size = state_size
+        self.state_dimension = state_dimension
         self.number_of_actions = number_of_actions
-        self.w =  1e-4*np.random.rand(state_size, number_of_actions)
+        self.w =  1e-4*np.random.rand(state_dimension, number_of_actions)
         self.rewards = []
         self.gamma = gamma
         self.best_R = -np.inf
-        self.best_w = np.random.rand(state_size, number_of_actions)
+        self.best_w = np.random.rand(state_dimension, number_of_actions)
         self.noise_scale = noise_scale
         self.progress_counter = 0
 
@@ -51,6 +51,9 @@ class HillClimbingAgent(Agent):
             self.progress_counter += 1
             if self.progress_counter >= 10000:
                 self.w = self.noise_scale * np.random.rand(*self.w.shape)
+
+            
+
         self.rewards = []
         
 

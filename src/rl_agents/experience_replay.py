@@ -25,7 +25,6 @@ class ExperienceReplay:
         return next(self.iterator)
 
         
-
     def store_experience(self, time_step, action_step, next_time_step):
         traj = trajectory.from_transition(time_step, action_step, next_time_step)
         # Add trajectory to the replay buffer

@@ -1,6 +1,7 @@
 import os
 import json
 from shutil import copyfile
+from src.utilities.constant_definition_parser import ConstantDefinitionParser
 from src.utilities.data_collector import DataCollector
 from src.rl_agents.agent_builder import AgentBuilder
 from src.storm_environment.environment import *
@@ -60,7 +61,7 @@ class Project():
         '''
         self.agent.save(self.project_folder_path)
 
-    def save_model_checking_result(self, prop_specification, prop_result, rl, model_size, model_checking_time, checking_time):
+    def save_model_checking_result(self, prop_specification, prop_result, rl, model_size, model_checking_time, checking_time, constant_definitions):
         '''
         Saves the model checking result
         :param prop_specification, property specification
@@ -68,9 +69,9 @@ class Project():
         :param rl, is reinforcement learning used?
         '''
         if 'model_checking_results' in self.report.keys():
-            self.report['model_checking_results'].append([prop_specification, prop_result, rl, model_size, model_checking_time,checking_time])
+            self.report['model_checking_results'].append([prop_specification, prop_result, rl, model_size, model_checking_time,checking_time, constant_definitions])
         else:
-            self.report['model_checking_results'] = ([[prop_specification, prop_result, rl, model_size, model_checking_time, checking_time]])
+            self.report['model_checking_results'] = ([[prop_specification, prop_result, rl, model_size, model_checking_time, checking_time, constant_definitions]])
         self.__save_report(self.project_folder_path, self.report)
         
 
@@ -114,7 +115,13 @@ class Project():
         :param constant_definitions: constant definitions
         :return StormEnvironment
         '''
-        storm_env = StormEnvironment(prism_file_path, command_line_args['constant_definitions'], command_line_args['max_steps'],  command_line_args['wrong_action_penalty'], command_line_args['reward_flag'], disabled_features)
+        tmp_constant_definition = command_line_args['constant_definitions']
+        if command_line_args['constant_definitions'].count('[')==1:
+            print(tmp_constant_definition)
+            tmp_constant_definition, _, _ = ConstantDefinitionParser.parse_constant_definition(tmp_constant_definition)
+            tmp_constant_definition = tmp_constant_definition[0]
+
+        storm_env = StormEnvironment(prism_file_path, tmp_constant_definition, command_line_args['max_steps'],  command_line_args['wrong_action_penalty'], command_line_args['reward_flag'], disabled_features)
         return storm_env
 
     def __create_agent(self, report, observation_spec, action_spec, environment):
