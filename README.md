@@ -80,7 +80,7 @@ If we interested in how our RL agent performs over a range of different environm
 
 `python3.8 cool_mc.py --task rl_model_checking --project_name example1 --constant_definitions "slippery=[0.1;0.1;1]" --prop 'Pmin=? [F "water"]'`
 
-![Properties over a range of Constant definition](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/properties.png)
+![Properties over a range of Constant definition](https://github.com/DennisGross/COOL-MC/blob/main/doc/images/properties.png)
 
 *A plot that visualizes how different constant definitions influence the safety property of the trained RL policy.*
 
