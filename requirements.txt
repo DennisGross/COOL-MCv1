@@ -76,10 +76,8 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycups==1.9.73
 pydotplus==2.0.2
-
 PyJWT==1.7.1
 pymacaroons==0.13.0
-pyparsing==2.4.7
 pyRFC3339==1.1
 python-debian===0.1.36ubuntu1
 pytz==2019.3
