@@ -37,14 +37,14 @@ The goal is to get familar with our tool and being able to use all our supported
 
 `python cool_mc.py --task training --architecture dqn --max_steps 20 --prism_file_path frozen_lake_4x4.prism --constant_definitions "slippery=0.04" --prop 'Pmax=? [F "water"]' --prop_type "min_prop" --project_name exp01_FL_4x4 --num_episodes 10000 --eval_interval 250`
 
-This first command trains a RL agent to get a near optimal policy to reach the frisbee and without falling into the water. The `task` parameter sets the COOL-MC into training mode (reinforcement learning) and the `architecture` the RL algorithm (in this example: deep q-learning). The `max_steps` parameter is needed to terminate the environment after a given number of steps (in this case 20). With the `prism_file_path` parameter, we inform COOL-MC on which environment we want to train our agent. The `constant_definitions` defines the constants of the environment. The `prop` parameter is the property specification, which we want to query while training. `prop_type` that we want to optimize for minimizing the property result. The `project_name` parameter names the project. `num_episodes` defines the number of epochs and `eval_interval` the interval of evaluation and property querying.
+This first command trains an RL agent to get a near-optimal policy to reach the frisbee without falling into the water. The `task` parameter sets the COOL-MC into training mode (reinforcement learning) and the `architecture` the RL algorithm (in this example: deep q-learning). The `max_steps` parameter is needed to terminate the environment after a given number of steps (20). With the `prism_file_path` parameter, we inform COOL-MC on which environment we want to train our agent. The `constant_definitions` defines the constants of the environment. The `prop` parameter is the property specification, which we want to query while training. `prop_type` that we want to optimize for minimizing the property result. The `project_name` parameter names the project. `num_episodes` defines the number of epochs and `eval_interval` the evaluation and property querying interval.
 
 
-COOL-MC gives us the possibility to monitor the training progress via tensorboard (if installed):
+COOL-MC gives us the possibility to monitor the training progress via Tensorboard (if installed):
 
 `tensorboard --logdir projects # Execute this command on your local machine`. 
 
-After 10000 epochs, we gain a RL policy with roughly 5% probability of falling into the water. Since the frozen lake environment is quite small, we can check the optimal probability of falling into the water by modifying `task training` to `task storm_model_checking` and removing unecessary parameters. This allows us to use Storm directly:
+After 10000 epochs, we gain an RL policy with a roughly 5% probability of falling into the water. Since the frozen lake environment is quite small, we can check the optimal probability of falling into the water by modifying `task training` to `task storm_model_checking` and removing unnecessary parameters. This allows us to use Storm directly:
 
 `python cool_mc.py --task storm_model_checking --prism_file_path frozen_lake_4x4.prism --constant_definitions "slippery=0.04" --prop 'Pmax=? [F "water"] --project_name exp01_FL_4x4`
 
@@ -65,7 +65,7 @@ After training the decision tree, we can use `task dt_model_checking` to model c
 
 `python cool_mc.py --task dt_model_checking --prism_file_path frozen_lake_4x4.prism --project_name example1 --constant_definitions "slippery=0.04"`
 
-By changing `task dt_model_checking` to `task attention_training` we are able to train an explainable model for our trained RL policy. Now it is possible to see which features influence the RL policy decision for a certain state:
+By changing `task dt_model_checking` to `task attention_training,` we can train an explainable model for our trained RL policy. Now it is possible to see which features influence the RL policy decision for a certain state:
 
 `python cool_mc.py --task attention_training --project_name example1 --constant_definitions "slippery=0.1"`
 
@@ -82,7 +82,7 @@ If we interested in how our RL agent performs over a range of different environm
 
 ![Properties over a range of Constant definition](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/properties.png)
 
-*A plot that visualize how different constant definitions influence the safety property of the trained RL policy.*
+*A plot that visualizes how different constant definitions influence the safety property of the trained RL policy.*
 
 ## Example 2 (Taxi)
 To demonstrate our tool, we are going to train a near optimal RL policy for the commonly known taxi environment.
