@@ -58,7 +58,7 @@ By changing `task rl_model_checking` to `task decision_tree` we are able to inte
 
 We can find the decision tree plot inside the project folder.
 
-![Decision Tree](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/decision_tree.png)
+![Decision Tree](https://github.com/DennisGross/COOL-MC/blob/main/doc/images/decision_tree.png)
 *Decision Tree Policy Interpretation of RL policy of example 1.*
 
 After training the decision tree, we can use `task dt_model_checking` to model check the decision tree policy:
