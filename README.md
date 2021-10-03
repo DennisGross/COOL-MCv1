@@ -20,9 +20,9 @@ We evaluate our tool-chain on multiple commonly use.
 11. Benchmarking
 12. Manual Installation
 
-## Getting Started with COOL-MC
+## Getting Started with COOL-MC (Latest Release)
 We assume that you have docker installed and that you run the following commands in the root of this repository:
-1. Download the docker container [here](https://drive.google.com/file/d/1X_3UERGPepC76MI060_VJkJXiEkA5MI3/view?usp=sharing).
+1. Download the docker container [here](https://drive.google.com/file/d/10C3PkC6uU0M-FEY58zeVOER8CK9zUO3L/view?usp=sharing).
 2. Load the docker container: `docker load --input coolmc.tar`
 3. Create a project folder: `mkdir projects`
 4. Run the docker container: `docker run --user "$(id -u):$(id -g)" -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
@@ -257,6 +257,8 @@ Switch to the repository folder and define environment variable `COOL_MC="$PWD"`
 5. `cmake ..`
 6. `make -j 1`
 
+For more information about building Storm, click [here](https://www.stormchecker.org/documentation/obtain-storm/build.html).
+
 #### (3) Install PyCarl
 0. `cd $COOL_MC`
 1. `git clone https://github.com/moves-rwth/pycarl.git`
@@ -266,12 +268,13 @@ Switch to the repository folder and define environment variable `COOL_MC="$PWD"`
 If permission problems: `sudo chmod 777 /usr/local/lib/python3.8/dist-packages/` and run third command again.
 
 
-#### (4) Install StormPy
+#### (4) Install Stormpy
 
 0. `cd $COOL_MC`
 1. `git clone https://github.com/moves-rwth/stormpy.git`
 2. `cd stormpy`
-3. `python setup.py build_ext --storm-dir ~/storm/build/ --jobs 1 develop`
+3. `python setup.py build_ext --storm-dir "${COOL_MC}/build/" --jobs 1 develop`
+For more information about the Stormpy installation, click [here](https://moves-rwth.github.io/stormpy/installation.html#installation-steps).
 
 #### (5) Install remaining python packages and create project folder
 0. `cd $COOL_MC`
