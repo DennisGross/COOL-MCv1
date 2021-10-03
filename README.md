@@ -259,6 +259,8 @@ Switch to the repository folder and define environment variable `COOL_MC="$PWD"`
 
 For more information about building Storm, click [here](https://www.stormchecker.org/documentation/obtain-storm/build.html).
 
+For testing the installation, follow the follow steps [here](https://www.stormchecker.org/documentation/obtain-storm/build.html#test-step-optional).
+
 #### (3) Install PyCarl
 0. `cd $COOL_MC`
 1. `git clone https://github.com/moves-rwth/pycarl.git`
@@ -274,7 +276,10 @@ If permission problems: `sudo chmod 777 /usr/local/lib/python3.8/dist-packages/`
 1. `git clone https://github.com/moves-rwth/stormpy.git`
 2. `cd stormpy`
 3. `python setup.py build_ext --storm-dir "${COOL_MC}/build/" --jobs 1 develop`
+
 For more information about the Stormpy installation, click [here](https://moves-rwth.github.io/stormpy/installation.html#installation-steps).
+
+For testing the installation, follow the steps [here](https://moves-rwth.github.io/stormpy/installation.html#testing-stormpy-installation).
 
 #### (5) Install remaining python packages and create project folder
 0. `cd $COOL_MC`
