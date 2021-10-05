@@ -73,7 +73,7 @@ By changing `task dt_model_checking` to `task attention_training,` we can train 
 
 You can find the attention mapping plot in the project folder:
 
-![Attention Map Plot](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/attention_map.png)
+![Attention Map Plot](https://github.com/DennisGross/COOL-MC/blob/main/doc/images/attention_map.png)
 *Attention Map of a RL policy.*
 
 If we interested in how our RL agent performs over a range of different environment initializations, we can use the following command:
@@ -86,11 +86,11 @@ If we interested in how our RL agent performs over a range of different environm
 
 Besides using Tensorboard, it is also possible to directly plot the rewards and property results while training and save them into the project folder:
 
-![Rewards while Training](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/reward_plotting.png)
+![Rewards while Training](https://github.com/DennisGross/COOL-MC/blob/main/doc/images/reward_plotting.png)
 
 *`python cool_mc.py --task plot_rewards --project_name example1`*
 
-![Property Results while Training](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/prop_plotting.png)
+![Property Results while Training](https://github.com/DennisGross/COOL-MC/blob/main/doc/images/prop_plotting.png)
 
 *`python cool_mc.py --task plot_props --project_name example1`*
 
