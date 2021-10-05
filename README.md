@@ -84,6 +84,16 @@ If we interested in how our RL agent performs over a range of different environm
 
 *A plot that visualizes how different constant definitions influence the safety property of the trained RL policy.*
 
+Besides using Tensorboard, it is also possible to directly plot the rewards and property results while training and save them into the project folder:
+
+![Rewards while Training](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/reward_plotting.png)
+
+*`python cool_mc.py --task plot_rewards --project_name example1`*
+
+![Property Results while Training](https://github.com/DennisGross/probabilistic_rl_model_checking/blob/main/doc/images/prop_plotting.png)
+
+*`python cool_mc.py --task plot_props --project_name example1`*
+
 ## Example 2 (Taxi)
 To demonstrate our tool, we are going to train a near optimal RL policy for the commonly known taxi environment.
 1. Start the interactive container and mount the PRISM and project folder: Run `docker run --user "$(id -u):$(id -g)" -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
@@ -167,6 +177,8 @@ For a detailed description, we refer to the src.rl_agents package.
 - Attention Training (attention_training)
 - Attention Map Plotting (attention_mapping)
 - decision tree training (decision_tree)
+- Plot Rewards of the training progress (plot_rewards)
+- Plot property results of the training progress (plot_props)
 
 ### prism_dir
 Specifies the folder with all PRISM files.
@@ -222,6 +234,9 @@ Features which should not be used by the RL agent: FEATURE1,FEATURE2,...
 
 ### attention_input
 Input for attention map plotting.
+
+### no_gpu
+Disable GPU.
 
 
 ## Benchmarking

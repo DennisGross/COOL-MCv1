@@ -16,7 +16,7 @@ def get_arguments():
     args = argparse.Namespace()
     unknown_args: List[str] = list()
     arg_parser.add_argument('--task', help='What kind of task? - Training Model (training) - RL Model Checking (rl_model_checking) - Model Checking (storm_model_checking)', type=str,
-                            default='decision_tree')
+                            default='training')
     arg_parser.add_argument('--prism_dir', help='Folder with all PRISM files', type=str,
                             default='prism_files')
     arg_parser.add_argument('--prism_file_path', help='Prism file path', type=str,
@@ -70,9 +70,9 @@ def get_arguments():
     arg_parser.add_argument('--eval_interval', help='Evaluation each NUMBER of steps', type=int,
                             default=10)
     arg_parser.add_argument('--prop', help='Property Specification', type=str,
-                            default='Tmin=? [F TOO_MUCH_ENERGY=true]')
+                            default='Pmin=? [F "water"]')
     arg_parser.add_argument('--prop_type', help='Maximal Reward (max_reward), Minimal Reward (min_reward), Property minimization (min_prop) or maximization (max_prop).', type=str,
-                            default='max_reward')
+                            default='min_reward')
     arg_parser.add_argument('--disabled_features', help='Features which should not be used by the RL agent: FEATURE1,FEATURE2,...', type=str,
                             default='')
     arg_parser.add_argument('--attention_input', help='Input for attention map plotting', type=str,
@@ -182,6 +182,9 @@ if __name__ == '__main__':
             formula_str, prop_result, model_size, model_checking_time)
         project.save_model_checking_result(
             formula_str, prop_result, None, model_size, model_checking_time, checking_time, command_line_arguments['constant_definitions'])
+    elif command_line_arguments['task'] == 'plot_rewards' or command_line_arguments['task'] == 'plot_props':
+        monitor = Monitor(project_folder, command_line_arguments['architecture'], training=False)
+        monitor.plot_training(project.report, command_line_arguments['task'])
     else:
         # Storm Model Checking
         monitor = Monitor(

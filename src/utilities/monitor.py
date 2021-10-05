@@ -3,6 +3,10 @@ import sys
 import os
 import tensorflow as tf
 from tf_agents.utils import common
+import matplotlib.pyplot as plt
+import numpy as np
+import json
+import os
 class Monitor:
 
     def __init__(self, root_dir, architecture, training=True):
@@ -38,8 +42,7 @@ class Monitor:
          print("\rProperty Result: {} with Model Size: {} checked in {} seconds\n".format(prop_result, model_size, model_checking_time), end="")
 
     def plot_prop_ranges(self,prop_results, range_tuple, xlabel, formula_str, project_folder):
-        import matplotlib.pyplot as plt
-        import numpy as np
+
 
         # Data for plotting
         x = np.arange(range_tuple[0], range_tuple[2], range_tuple[1])
@@ -54,6 +57,28 @@ class Monitor:
 
         fig.savefig(os.path.join(project_folder, "properties.png"))
         plt.show()
+
+    def plot_training(self, report, task):
+        y1 = None
+        file_name = ''
+        if task=='plot_props':
+            y1 = report['prop_results']
+            plt.ylabel(report['prop'])
+            file_name =  'training_props.png'
+        else:
+            y1 = report['rewards']
+            plt.ylabel('Rewards')
+            file_name =  'training_rewards.png'
+        x = list(range(1,len(y1)+1))
+        plt.title('RL Training Progress')
+        plt.xlabel("Epochs x " + str(report['eval_interval']))
+        
+        plt.plot(x, y1)
+        
+        plt.savefig(os.path.join(report['project_dir'], report['project_name'], file_name))
+        plt.show()
+
+    
 
 
 
