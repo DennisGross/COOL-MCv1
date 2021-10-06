@@ -1,0 +1,6 @@
+projects/**
+stormpy/**
+env/**
+bin/prism_files/**
+bin/projects/**
+**/__pycache__/**
