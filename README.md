@@ -251,6 +251,12 @@ The results of these experiments are described in our paper. To reproduce our re
 
 Note: Experiments which RAN OUT OF MEMORY or TIME OUTs are commented out.
 
+## Software Architecture
+
+![Property Results while Training](https://github.com/DennisGross/COOL-MC/blob/main/doc/images/use_case_diagram.png)
+
+![Property Results while Training](https://github.com/DennisGross/COOL-MC/blob/main/doc/images/uml_class.png)
+
 ## Manual Installation
 
 ### Creating the Docker
