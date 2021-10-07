@@ -120,7 +120,6 @@ class Project():
             print(tmp_constant_definition)
             tmp_constant_definition, _, _ = ConstantDefinitionParser.parse_constant_definition(tmp_constant_definition)
             tmp_constant_definition = tmp_constant_definition[0]
-
         storm_env = StormEnvironment(prism_file_path, tmp_constant_definition, command_line_args['max_steps'],  command_line_args['wrong_action_penalty'], command_line_args['reward_flag'], disabled_features)
         return storm_env
 

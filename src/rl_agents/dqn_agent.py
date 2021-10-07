@@ -40,7 +40,6 @@ class DQNAgent(Agent):
         self.sample_counter = 0
         self.batch_size = report['batch_size']
         train_step_counter = tf.Variable(0)
-
         self.agent = dqn_agent.DqnAgent(
             tf_env.time_step_spec(),
             tf_env.action_spec(),

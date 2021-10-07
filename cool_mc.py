@@ -7,6 +7,7 @@ from src.utilities.constant_definition_parser import ConstantDefinitionParser
 from src.utilities.training import train
 from src.interpreter.interpreter import *
 from src.rl_agents.agent_builder import *
+from src.utilities.logger import *
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
@@ -93,6 +94,8 @@ if __name__ == '__main__':
         '\\', '')   # Cleaning Escape Characters from command line
     formula_str = command_line_arguments['prop']
     project = Project(command_line_arguments)
+
+    cool_mc_logger.info("Init Project", extra={'project':project_folder,'task':command_line_arguments['task']})
     if command_line_arguments['task'] == 'training':
         # Training RL agent
         monitor = Monitor(
@@ -143,6 +146,7 @@ if __name__ == '__main__':
                 all_prop_results, range_tuple, range_state_variable, formula_str, project_folder)
 
         else:
+            cool_mc_logger.error('We only support plotting for one state variable.', extra={'project':project_folder,'task':command_line_arguments['task']})
             raise ValueError(
                 "We only support plotting for one state variable...")
     elif command_line_arguments['task'] == 'attention_training':

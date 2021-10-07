@@ -37,7 +37,7 @@ class Interpreter:
         df = generator.df
         X = df[generator.features]
         y = df['action']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.01, random_state=1)
         #  Create Decision Tree classifer object
         clf = DecisionTreeClassifier()
 
