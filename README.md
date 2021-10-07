@@ -18,7 +18,8 @@ We evaluate our tool-chain on multiple commonly use.
 9. Storm Model Checking
 10. Command Line Arguments
 11. Benchmarking
-12. Manual Installation
+12. Software Architecture
+13. Manual Installation
 
 ## Getting Started with COOL-MC (Latest Release)
 We assume that you have docker installed and that you run the following commands in the root of this repository:
