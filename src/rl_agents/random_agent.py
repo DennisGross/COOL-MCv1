@@ -5,11 +5,12 @@ from src.rl_agents.agent import Agent
 
 class RandomAgent(Agent):
 
-    def __init__(self, number_of_actions):
+    def __init__(self, number_of_actions, random_seed):
         super().__init__()
         self.number_of_actions = number_of_actions
         self.state_action_memory = {}
-        
+        self.random_seed = random_seed
+        random.seed(self.random_seed)
 
     def select_action(self, time_step, deploy):
         state = str(time_step.observation.tolist())

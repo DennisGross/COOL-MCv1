@@ -41,7 +41,7 @@ class AgentBuilder():
             agent = ReinforceAgent(environment.tf_environment, report)
             agent.load(project_folder)
         elif report['architecture'] == 'random':
-            agent = RandomAgent(number_of_actions)
+            agent = RandomAgent(number_of_actions, report['random_seed'])
         else:
             raise NotImplementedError('Architecture is not supported')
         return agent

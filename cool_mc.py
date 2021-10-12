@@ -80,6 +80,8 @@ def get_arguments():
                             default='x=1,y=2')
     arg_parser.add_argument('--no_gpu', help='GPU for neural network?', type=bool,
                             default=False)
+    arg_parser.add_argument('--random_seed', help='Noise Scale for Hillclimbing', type=int,
+                            default=0)
     args, unknown_args = arg_parser.parse_known_args(sys.argv)
     return vars(args)
 

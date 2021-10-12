@@ -62,6 +62,7 @@ def state_to_json(state):
 
 def get_time_step(project, state, reward, done = False):
     json_state = state_to_json(state)
+    print(json_state)
     state = project.environment.storm_bridge.parse_state(str(json_state).replace("'",'"'))
     if done:
         return ts.termination(state, reward)
@@ -84,17 +85,18 @@ def map_action(policy_step):
 
 
 
-command_line_args = {'architecture':'sarsamax', 'learning_rate':0.001, 'epsilon_dec':0.99999, 'epsilon_min':0.4, 'alpha':0.6, 'batch_size':32, 'epsilon':1,'gamma':0.99, 'replay_buffer_size':10000, 'layers':3,'neurons':64, 'disabled_features' : '', 'prism_dir' : 'prism_files', 'prism_file_path':'frozen_lake_4x4.prism','project_dir':'projects', 'project_name':'example1_vice_versa','constant_definitions':'slippery=0.04','max_steps':10, 'wrong_action_penalty':1000, 'reward_flag':False}
+command_line_args = {'architecture':'dqn', 'learning_rate':0.001, 'epsilon_dec':0.99999, 'epsilon_min':0.4, 'alpha':0.6, 'batch_size':32, 'epsilon':1,'gamma':0.99, 'replay_buffer_size':10000, 'layers':3,'neurons':64, 'disabled_features' : '', 'prism_dir' : 'prism_files', 'prism_file_path':'frozen_lake_4x4.prism','project_dir':'projects', 'project_name':'example1_vice_versa','constant_definitions':'slippery=0.04','max_steps':10, 'wrong_action_penalty':1000, 'reward_flag':False}
 project = Project(command_line_args)
 success = False
 MAX_ITERATIONS = 20000
 env = gym.make('FrozenLake-v0',is_slippery=False)
-for epoch in range(0,100000):
+for epoch in range(0,10):
     state = env.reset()
     state = get_time_step(project, state, 0)
     #print(epoch)
     #env.render()
     for i in range(MAX_ITERATIONS):
+        print(state)
         action = map_action(project.agent.select_action(state, False))
         new_state, reward, done, info = env.step(action)
         #env.render()
