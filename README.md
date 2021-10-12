@@ -36,7 +36,7 @@ The goal is to get familar with our tool and being able to use all our supported
 1. Start the interactive container and mount the PRISM and project folder: Run `docker run --user "$(id -u):$(id -g)" -v "$(pwd)/projects":/projects -v "$(pwd)/prism_files":/prism_files -it coolmc bash`
 2. Execute `bash example_1.sh`.
 
-`python cool_mc.py --task training --architecture dqn --max_steps 20 --prism_file_path frozen_lake_4x4.prism --constant_definitions "slippery=0.04" --prop 'Pmax=? [F "water"]' --prop_type "min_prop" --project_name exp01_FL_4x4 --num_episodes 10000 --eval_interval 250`
+`python cool_mc.py --task training --architecture dqn --max_steps 20 --prism_file_path frozen_lake_4x4.prism --constant_definitions "slippery=0.04" --prop 'Pmax=? [F "water"]' --prop_type "min_prop" --project_name exp01_FL_4x4`
 
 This first command trains an RL agent to get a near-optimal policy to reach the frisbee without falling into the water. The `task` parameter sets the COOL-MC into training mode (reinforcement learning) and the `architecture` the RL algorithm (in this example: deep q-learning). The `max_steps` parameter is needed to terminate the environment after a given number of steps (20). With the `prism_file_path` parameter, we inform COOL-MC on which environment we want to train our agent. The `constant_definitions` defines the constants of the environment. The `prop` parameter is the property specification, which we want to query while training. `prop_type` that we want to optimize for minimizing the property result. The `project_name` parameter names the project. `num_episodes` defines the number of epochs and `eval_interval` the evaluation and property querying interval.
 
