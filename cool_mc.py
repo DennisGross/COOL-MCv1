@@ -69,7 +69,7 @@ def get_arguments():
     arg_parser.add_argument('--num_supervised_epochs', help='Number of supverised learning epochs', type=int,
                             default=10)
     arg_parser.add_argument('--eval_interval', help='Evaluation each NUMBER of steps', type=int,
-                            default=10)
+                            default=250)
     arg_parser.add_argument('--prop', help='Property Specification', type=str,
                             default='Pmin=? [F "water"]')
     arg_parser.add_argument('--prop_type', help='Maximal Reward (max_reward), Minimal Reward (min_reward), Property minimization (min_prop) or maximization (max_prop).', type=str,
